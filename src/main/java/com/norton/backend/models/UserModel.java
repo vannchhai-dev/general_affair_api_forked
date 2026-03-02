@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import lombok.*;
@@ -47,13 +48,21 @@ public class UserModel extends BaseIdModel implements UserDetails {
   private UserStatus userStatus;
 
   @NotNull(message = "Role is required")
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "role_id", nullable = false)
   private UserRoleModel role;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return List.of(new SimpleGrantedAuthority(role.getRoleName()));
+
+    List<GrantedAuthority> authorities = new ArrayList<>();
+    authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
+
+    role.getPermissions()
+        .forEach(
+            permission ->
+                authorities.add(new SimpleGrantedAuthority(permission.getPermissionName())));
+    return authorities;
   }
 
   @Override

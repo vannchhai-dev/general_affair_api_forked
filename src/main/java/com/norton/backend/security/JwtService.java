@@ -6,10 +6,12 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -43,9 +45,14 @@ public class JwtService {
   }
 
   public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+
+    List<String> authorities =
+        userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+
     return Jwts.builder()
         .claims(extraClaims)
         .subject(userDetails.getUsername())
+        .claim("authorities", authorities)
         .issuedAt(new Date())
         .expiration(new Date(System.currentTimeMillis() + jwtProperties.getExpiration()))
         .signWith(getSigningKey())
