@@ -83,6 +83,6 @@ public class UserModel extends BaseIdModel implements UserDetails {
 
   @Override
   public boolean isEnabled() {
-    return true;
+    return userStatus == UserStatus.ACTIVE;
   }
 }

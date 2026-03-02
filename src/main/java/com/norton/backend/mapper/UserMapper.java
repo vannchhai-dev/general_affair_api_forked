@@ -5,7 +5,7 @@ import com.norton.backend.models.UserModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = RoleMapper.class)
 public interface UserMapper {
 
   @Mapping(target = "role", source = "role.roleName")
