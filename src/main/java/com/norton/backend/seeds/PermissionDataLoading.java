@@ -7,10 +7,12 @@ import com.norton.backend.repositories.UserRoleRepository;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Order(value = 1)
 public class PermissionDataLoading implements CommandLineRunner {
 
   private final PermissionRepository permissionRepository;
@@ -55,9 +57,10 @@ public class PermissionDataLoading implements CommandLineRunner {
                         UserRoleModel.builder()
                             .roleName(roleName)
                             .description(description)
-                            .permissions(Set.of()) // start empty
+                            .permissions(new java.util.HashSet<>())
                             .build()));
 
+    role.getPermissions().clear();
     role.getPermissions().addAll(permissions);
 
     roleRepository.save(role);
