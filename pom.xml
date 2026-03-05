@@ -147,7 +147,7 @@
 						<image>eclipse-temurin:21-jre-alpine</image>
 					</from>
 					<to>
-						<image>ghcr.io/vannchhai123/general-affair-system</image>
+						<image>ghcr.io/vannchhai-dev/general-affair-system</image>
 						<tags>
 							<tag>latest</tag>
 							<tag>${project.version}</tag>
