@@ -1,6 +1,7 @@
 package com.norton.backend.controllers.auth;
 
 import com.norton.backend.dto.request.LoginRequest;
+import com.norton.backend.dto.request.RefreshRequest;
 import com.norton.backend.dto.responses.AuthResponse;
 import com.norton.backend.dto.responses.UserDto;
 import com.norton.backend.services.auth.AuthService;
@@ -24,5 +25,12 @@ public class AuthController {
   @PostMapping("/login")
   public ResponseEntity<AuthResponse<UserDto>> login(@Valid @RequestBody LoginRequest request) {
     return ResponseEntity.ok(authService.login(request));
+  }
+
+  @PostMapping("/refresh")
+  public ResponseEntity<AuthResponse<UserDto>> refreshToken(@RequestBody RefreshRequest request) {
+
+    AuthResponse<UserDto> response = authService.refreshToken(request.getRefreshToken());
+    return ResponseEntity.ok(response);
   }
 }

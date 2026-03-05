@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 import lombok.*;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
@@ -51,6 +52,19 @@ public class UserModel extends BaseIdModel implements UserDetails {
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "role_id", nullable = false)
   private UserRoleModel role;
+
+  @OneToOne(mappedBy = "user")
+  private OfficerModel officer;
+
+  @Column(nullable = false, unique = true, updatable = false)
+  private UUID uuid;
+
+  @PrePersist
+  public void generateUuid() {
+    if (uuid == null) {
+      uuid = UUID.randomUUID();
+    }
+  }
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {

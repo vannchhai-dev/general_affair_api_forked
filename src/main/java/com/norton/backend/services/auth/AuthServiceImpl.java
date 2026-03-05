@@ -12,7 +12,6 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,7 +22,6 @@ public class AuthServiceImpl implements AuthService {
   private final UserRepository userRepository;
   private final AuthenticationManager authenticationManager;
   private final CustomUserDetailsService customUserDetailsService;
-  private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
 
   @Override
@@ -42,6 +40,29 @@ public class AuthServiceImpl implements AuthService {
         .accessToken(accessToken)
         .refreshToken(refreshToken)
         .data(userDto)
+        .build();
+  }
+
+  @Override
+  public AuthResponse<UserDto> refreshToken(String refreshToken) {
+
+    if (!jwtService.isRefreshTokenValid(refreshToken)) {
+      throw new RuntimeException("Invalid refresh token");
+    }
+
+    String username = jwtService.extractUsername(refreshToken);
+    UserModel user =
+        userRepository
+            .findByUsername(username)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+    String accessToken = jwtService.generateToken(Map.of(), user);
+    String newRefreshToken = jwtService.generateRefreshToken(user);
+
+    return AuthResponse.<UserDto>builder()
+        .accessToken(accessToken)
+        .refreshToken(newRefreshToken)
+        .data(userMapper.toDto(user))
         .build();
   }
 }

@@ -1,39 +1,44 @@
 package com.norton.backend.seeds;
 
 import com.norton.backend.enums.DepartmentStatus;
+import com.norton.backend.enums.GenderEnum;
 import com.norton.backend.enums.OfficerStatus;
 import com.norton.backend.enums.PositionStatus;
 import com.norton.backend.models.*;
 import com.norton.backend.repositories.*;
 import java.util.List;
+import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component
-@Order(value = 4)
-// @Profile("dev")
+@RequiredArgsConstructor
+@Order(4)
+@Profile("dev")
 public class OfficerDataLoading implements CommandLineRunner {
 
   private final DepartmentRepository departmentRepository;
   private final PositionRepository positionRepository;
   private final OfficerRepository officerRepository;
-
-  public OfficerDataLoading(
-      DepartmentRepository departmentRepository,
-      PositionRepository positionRepository,
-      OfficerRepository officerRepository) {
-    this.departmentRepository = departmentRepository;
-    this.positionRepository = positionRepository;
-    this.officerRepository = officerRepository;
-  }
+  private final UserRepository userRepository;
 
   @Override
   public void run(String... args) {
 
-    if (departmentRepository.count() > 0) {
-      return;
-    }
+    if (officerRepository.count() > 0) return;
+
+    UserModel adminUser =
+        userRepository
+            .findByUsername("admin")
+            .orElseThrow(() -> new RuntimeException("Admin user not found"));
+
+    UserModel normalUser =
+        userRepository
+            .findByUsername("user")
+            .orElseThrow(() -> new RuntimeException("User not found"));
 
     DepartmentModel hr =
         DepartmentModel.builder().name("Human Resources").status(DepartmentStatus.ACTIVE).build();
@@ -61,26 +66,36 @@ public class OfficerDataLoading implements CommandLineRunner {
 
     OfficerModel officer1 =
         OfficerModel.builder()
+            .uuid(UUID.randomUUID().toString())
+            .officerCode("OFF-001")
             .firstName("John")
             .lastName("Doe")
+            .gender(GenderEnum.MALE)
             .phone("012345678")
             .email("officer1@gmail.com")
+            .imageUrl("https://example.com/images/john.jpg")
             .position(hrManager)
             .status(OfficerStatus.ACTIVE)
+            .user(adminUser)
             .build();
 
     OfficerModel officer2 =
         OfficerModel.builder()
+            .uuid(UUID.randomUUID().toString())
+            .officerCode("OFF-002")
             .firstName("Jane")
             .lastName("Smith")
+            .gender(GenderEnum.MALE)
             .phone("098765432")
             .email("officer2@gmail.com")
+            .imageUrl("https://example.com/images/jane.jpg")
             .position(developer)
             .status(OfficerStatus.ACTIVE)
+            .user(normalUser)
             .build();
 
     officerRepository.saveAll(List.of(officer1, officer2));
 
-    System.out.println("✅ Seed data inserted successfully!");
+    System.out.println("✅ Officer seed data inserted successfully!");
   }
 }

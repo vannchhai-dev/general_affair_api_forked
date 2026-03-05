@@ -44,6 +44,10 @@ public class JwtService {
     return extractClaim(token, Claims::getExpiration).before(new Date());
   }
 
+  public boolean isRefreshTokenValid(String token) {
+    return !isTokenExpired(token);
+  }
+
   public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
 
     List<String> authorities =

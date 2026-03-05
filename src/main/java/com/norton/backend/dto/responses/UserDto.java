@@ -1,5 +1,6 @@
 package com.norton.backend.dto.responses;
 
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserDto {
 
-  private Long id;
+  private UUID uuid;
   private String fullName;
   private String role;
   private boolean enabled;

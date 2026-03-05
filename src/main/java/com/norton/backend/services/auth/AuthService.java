@@ -6,4 +6,6 @@ import com.norton.backend.dto.responses.UserDto;
 
 public interface AuthService {
   AuthResponse<UserDto> login(LoginRequest request);
+
+  AuthResponse<UserDto> refreshToken(String refreshToken);
 }
