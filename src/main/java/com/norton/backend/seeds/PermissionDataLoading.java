@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Order(value = 1)
-@Profile("dev")
+//@Profile("dev")
 public class PermissionDataLoading implements CommandLineRunner {
 
   private final PermissionRepository permissionRepository;

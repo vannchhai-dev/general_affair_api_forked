@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Order(4)
-@Profile("dev")
+//@Profile("dev")
 public class OfficerDataLoading implements CommandLineRunner {
 
   private final DepartmentRepository departmentRepository;
