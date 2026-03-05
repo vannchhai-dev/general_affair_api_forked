@@ -28,7 +28,6 @@ jobs:
         env:
           JIB_TO_AUTH_USERNAME: ${{ github.actor }}
           JIB_TO_AUTH_PASSWORD: ${{ secrets.GHCR_TOKEN }}
-
       - name: Trigger Railway Deploy
         run: |
           curl -X POST https://backboard.railway.com/graphql/v2 \
