@@ -57,7 +57,9 @@ public class SecurityConfig {
         .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
         .authorizeHttpRequests(
             auth ->
-                auth.requestMatchers(AuthController.BASE_URL + "/**")
+                auth.requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**")
+                    .permitAll()
+                    .requestMatchers(AuthController.BASE_URL + "/**")
                     .permitAll()
                     .requestMatchers("/")
                     .permitAll()
@@ -116,10 +118,12 @@ public class SecurityConfig {
     CorsConfiguration config = new CorsConfiguration();
 
     config.setAllowedOrigins(
-        List.of("http://localhost:3000", "https://finance-manager-aditi-midterm-front.vercel.app"));
+        List.of(
+            "http://localhost:3000",
+            "https://vercel.com/vannchhai123s-projects/general-affair-app"));
     config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-    config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-    config.setExposedHeaders(List.of("Authorization")); // optional
+    config.setAllowedHeaders(List.of("*"));
+    config.setExposedHeaders(List.of("Authorization"));
     config.setAllowCredentials(true);
 
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
