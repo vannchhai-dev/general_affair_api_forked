@@ -113,20 +113,17 @@ public class SecurityConfig {
 
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration configuration = new CorsConfiguration();
+    CorsConfiguration config = new CorsConfiguration();
 
-    configuration.setAllowedOrigins(
-        List.of(
-            "http://localhost:3000",
-            "https://general-affair-system-production-c05f.up.railway.app"));
+    config.setAllowedOrigins(
+        List.of("http://localhost:3000", "https://finance-manager-aditi-midterm-front.vercel.app"));
+    config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+    config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+    config.setExposedHeaders(List.of("Authorization")); // optional
+    config.setAllowCredentials(true);
 
-    configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-
-    configuration.setAllowedHeaders(List.of("*"));
-    configuration.setAllowCredentials(true);
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", configuration);
-
+    source.registerCorsConfiguration("/**", config);
     return source;
   }
 }
